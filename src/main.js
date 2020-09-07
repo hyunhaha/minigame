@@ -1,4 +1,5 @@
 'use strict';
+import PopUp from './popup.js';
 //1.paly버튼이 눌러지면
 //  -시간이 시작
 //  -카운트 시작
@@ -20,9 +21,7 @@ const field__rect = field.getBoundingClientRect();
 const start__button = document.querySelector('.game-play');
 const timer = document.querySelector('.game-time');
 const game_score = document.querySelector('.game-score');
-const pop__up = document.querySelector('.pop-up');
-const pop__up__text = document.querySelector('.pop-up-message');
-const pop__up__refresh = document.querySelector('.pop-up-refresh');
+
 
 const carrot__sound = new Audio('../sound/carrot_pull.mp3');
 const alert__sound = new Audio('../sound/alert.wav');
@@ -30,6 +29,8 @@ const bg__sound = new Audio('../sound/bg.mp3');
 const bug__sound = new Audio('../sound/bug_pull.mp3');
 const win__sound = new Audio('../sound/game_win.mp3');
 
+const gameFinishedBanner = new PopUp();
+gameFinishedBanner.setClickListener(start_game);
 
 let started = false;
 let timer__function = undefined;
@@ -44,11 +45,6 @@ start__button.addEventListener('click', (event) => {
     }
 
 });
-
-pop__up__refresh.addEventListener('click', () => {
-    start_game();
-    hide_popup();
-})
 
 function init() {
     game_score.innerHTML = CARROT_COUNT;
@@ -98,7 +94,7 @@ function stop_game() {
     started = false;
     stop_game_timer();
     hide_game_button();
-    show_popup_with_text('Do it again ?');
+    gameFinishedBanner.showWithText('Do it again ?');
     play_sound(alert__sound);
     stop_sound(bg__sound);
 }
@@ -113,7 +109,7 @@ function finish_game(win) {
     }
     stop_game_timer();
     stop_sound(bg__sound);
-    show_popup_with_text(win ? 'you won' : 'you lost');
+    gameFinishedBanner.showWithText(win ? 'you won' : 'you lost');
 }
 
 function show_timer_score() {
@@ -154,14 +150,7 @@ function hide_game_button() {
     start__button.style.visibility = 'hidden'
 }
 
-function show_popup_with_text(text) {
-    pop__up__text.innerText = text;
-    pop__up.classList.remove('pop-up-hide');
 
-}
-function hide_popup() {
-    pop__up.classList.add('pop-up-hide');
-}
 
 function onField_clicked(event) {
 

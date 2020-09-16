@@ -2,8 +2,30 @@
 import Field from './field.js';
 import * as sound from './sound.js';
 
+//빌더 패턴 
+export default class GameBuilder {
+    gameDuration(Duration) {
+        this.gameDuration = Duration;
+        return this;//클래스 자체를 리턴해줘서 체이닝하여 계속 클래스를 호출 할 수 있게
+    }
+    carrotCount(count) {
+        this.carrotCount = count;
+        return this;
+    }
+    bugCount(count) {
+        this.bugCount = count;
+        return this;
+    }
+    build() {
+        return new Game(
+            this.carrotCount,//
+            this.bugCount,
+            this.gameDuration
+        );
+    }
+}
 
-export default class Game {
+class Game {
     constructor(carrotCount, bugCount, gameDuration) {
         this.carrotCount = carrotCount;
         this.bugCount = bugCount;

@@ -2,8 +2,14 @@
 import Field from './field.js';
 import * as sound from './sound.js';
 
+export const Reason = Object.freeze({
+    lose: 'lose',
+    win: 'win',
+    cancel: 'cancel',
+});
+
 //빌더 패턴 
-export default class GameBuilder {
+export class GameBuilder {
     gameDuration(Duration) {
         this.gameDuration = Duration;
         return this;//클래스 자체를 리턴해줘서 체이닝하여 계속 클래스를 호출 할 수 있게
@@ -37,7 +43,7 @@ class Game {
         this.gameStartButton.addEventListener('click', (event) => {
 
             if (this.started) {
-                this.stop();
+                this.stop(Reason.cancel);
             } else {
                 this.start();
             }
@@ -62,10 +68,10 @@ class Game {
             this.score++;
             this.updateScoreBoard();
             if (this.score === this.carrotCount) {
-                this.finish(true);
+                this.stop(Reason.win);
             }
         } else if (item === 'bug') {
-            this.finish(false);
+            this.stop(Reason.lose);
         }
     }
 
@@ -81,27 +87,16 @@ class Game {
         this.onGameStop = onGameStop;
 
     }
-    stop() {
+    stop(reason) {
         this.started = false;
         this.stopGameTimer();
         this.hideGameButton();
-        sound.playAlert();
         sound.stopBackground();
-        this.onGameStop && this.onGameStop('cancel');
-    }
-    finish(win) {
-        this.stopGameTimer();
-        this.hideGameButton();
-        this.started = false;
-        if (win) {
-            sound.playWin();
-        } else {
-            sound.playBug();
-        }
-        sound.stopBackground();
-        this.onGameStop && this.onGameStop(win ? 'win' : 'lose');
 
+
+        this.onGameStop && this.onGameStop(reason);
     }
+
     showTimerScore() {
         this.gameScore.style.visibility = "visible";
         this.gameTimer.style.visibility = "visible";
@@ -112,7 +107,7 @@ class Game {
         this.timerFunction = setInterval(() => {
             if (number <= 0) {
                 clearInterval(this.timerFunction);
-                this.finish(this.carrotCount === this.score)
+                this.stop(this.carrotCount === this.score ? Reason.win : Reason.lose)
                 return;
             } this.updateTimerText(--number);
         }, 1000);

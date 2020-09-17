@@ -92,8 +92,6 @@ class Game {
         this.stopGameTimer();
         this.hideGameButton();
         sound.stopBackground();
-
-
         this.onGameStop && this.onGameStop(reason);
     }
 

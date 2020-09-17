@@ -21,6 +21,7 @@ game.setGameStopListener(reason => {
         case Reason.win:
             message = 'YOU WIN!';
             sound.playWin();
+
             break;
         case Reason.cancel:
             message = 'REPLAY?';
@@ -29,7 +30,7 @@ game.setGameStopListener(reason => {
         default:
             throw new Error('not valid reason');
     }
-    gameFinishedBanner.showWithText(message);
+    gameFinishedBanner.showWithText(message, reason);
 })
 
 gameFinishedBanner.setClickListener(() => {

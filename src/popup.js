@@ -1,5 +1,5 @@
 'use strict';
-import { GameBuilder, Reason } from './game.js';
+import { Reason } from './game.js';
 
 export default class PopUp {
     constructor() {
@@ -11,9 +11,16 @@ export default class PopUp {
             this.onClick && this.onClick();
             this.hide();
         })
+        this.popUpNext.addEventListener('click', () => {
+            this.onNextClick && this.onNextClick();
+            this.hide();
+        });
     }
     setClickListener(onClick) {
         this.onClick = onClick;
+    }
+    setNextClickListener(onNextClick) {
+        this.onNextClick = onNextClick;
     }
     showWithText(text, reason) {
         this.popUpText.innerText = text;

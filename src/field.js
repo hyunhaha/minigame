@@ -13,8 +13,8 @@ export default class Field {
     }
     init() {
         this.field.innerHTML = '';
-        this._additem('carrot', 'img/carrot.png', this.carrotCount);
-        this._additem('bug', 'img/bug.png', this.bugCount);
+        this._additem('carrot', 'img/clover.png', this.carrotCount);
+        this._additem('bug', 'img/bug2.png', this.bugCount);
     }
     setClickListener(onItemClick) {
         this.onItemClick = onItemClick;

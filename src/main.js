@@ -4,11 +4,14 @@ import { GameBuilder, Reason } from './game.js';
 import * as sound from './sound.js';
 
 const gameFinishedBanner = new PopUp();
+
 const game = new GameBuilder()
-    .carrotCount(5)
-    .bugCount(5)
+    .carrotCount(3)
+    .bugCount(3)
     .gameDuration(5)
     .build();
+
+
 
 game.setGameStopListener(reason => {
     console.log(reason);
@@ -19,7 +22,7 @@ game.setGameStopListener(reason => {
             sound.playBug();
             break;
         case Reason.win:
-            message = 'YOU WIN!';
+            message = 'YOU WIN! Go to the next stage';
             sound.playWin();
 
             break;
@@ -37,4 +40,6 @@ gameFinishedBanner.setClickListener(() => {
     game.start();
 });
 
-
+gameFinishedBanner.setNextClickListener(() => {
+    game.startNextState();
+});

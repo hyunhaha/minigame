@@ -31,6 +31,7 @@ export class GameBuilder {
     }
 }
 
+
 class Game {
     constructor(carrotCount, bugCount, gameDuration) {
         this.carrotCount = carrotCount;
@@ -40,6 +41,8 @@ class Game {
         this.gameStartButton = document.querySelector('.game-play');
         this.gameTimer = document.querySelector('.game-time');
         this.gameScore = document.querySelector('.game-score');
+        this.popUpNext = document.querySelector('.pop-up-next');
+
         this.gameStartButton.addEventListener('click', (event) => {
 
             if (this.started) {
@@ -50,7 +53,8 @@ class Game {
 
         });
 
-        this.gameField = new Field(carrotCount, bugCount);
+        this.gameField = new Field(this.carrotCount, this.bugCount);
+        console.log(`carrot bug ${this.carrotCount}, ${this.bugCount}`);
         this.gameField.setClickListener(this.onItemClick);
 
         this.gameStarted = false;
@@ -94,7 +98,37 @@ class Game {
         sound.stopBackground();
         this.onGameStop && this.onGameStop(reason);
     }
+    startNextState() {
+        this.addElement();
+        this.started = true;
+        this.init2();
+        this.showTimerScore();
+        this.showStopButton();
+        this.startGameTimer();
+        sound.playBackground();
+    }
+    addElement() {
+        this.carrotCount += 2;
+        this.bugCount += 2;
+        this.gameDuration += 1;
+    }
 
+    init() {
+        this.score = 0;
+        this.gameScore.innerHTML = this.carrotCount;
+
+        this.gameField.init();
+
+    }
+    init2() {
+        this.score = 0;
+        this.gameScore.innerHTML = this.carrotCount;
+        this.gameField = new Field(this.carrotCount, this.bugCount);
+        console.log(`carrot bug ${this.carrotCount}, ${this.bugCount}`);
+        // this.gameField.setClickListener(this.onItemClick);
+        this.gameField.init();
+
+    }
     showTimerScore() {
         this.gameScore.style.visibility = "visible";
         this.gameTimer.style.visibility = "visible";
@@ -120,14 +154,7 @@ class Game {
         const seconds = time % 60;
         this.gameTimer.innerHTML = `${minutes}:${seconds}`;
     }
-    init() {
-        this.gameScore.innerHTML = this.carrotCount;
 
-        this.gameField.init();
-        this.score = 0;
-
-
-    }
     showStopButton() {
         const icon = document.querySelector('.fas');
         icon.classList.add('fa-stop');
@@ -139,7 +166,9 @@ class Game {
     }
 
     updateScoreBoard() {
+        console.log(`score!! ${this.score}, ${this.carrotCount}`);
         this.gameScore.innerHTML = this.carrotCount - this.score;
+
     }
 
 
